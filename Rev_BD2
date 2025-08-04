@@ -1,0 +1,106 @@
+-- Questão 01
+
+CREATE TABLE funcionario (
+    pnome VARCHAR(20),
+    minicial CHAR(1),
+    unome VARCHAR(20),
+    cpf CHAR(11) PRIMARY KEY,
+    datanasc DATE,
+    endereco VARCHAR(100),
+    sexo CHAR(1),
+    salario DECIMAL(10,2),
+    cpf_supervisor CHAR(11),
+    dnr INT,
+    FOREIGN KEY (cpf_supervisor) REFERENCES funcionario(cpf),
+    FOREIGN KEY (dnr) REFERENCES deparmento (Dnumero)
+);
+
+CREATE TABLE deparmento (
+    dnome VARCHAR(30),
+    dnumero INT PRIMARY KEY,
+    cpf_gerente CHAR(11) DEFAULT '123456789101',
+    data_inicio_gerente DATE
+);
+
+CREATE TABLE localizacao_dep (
+    dnumero INT,
+    dlocal VARCHAR(50),
+    uf CHAR(2),
+    FOREIGN KEY (dnumero) REFERENCES deparmento(dnumero)
+);
+
+CREATE TABLE projeto (
+    projnome VARCHAR(30),
+    projnumero INT PRIMARY KEY,
+    projlocal VARCHAR(50),
+    dnum INT,
+    FOREIGN KEY (dnum) REFERENCES deparmento(dnumero)
+);
+
+CREATE TABLE trabalha_em (
+    fcpf CHAR(11),
+    pnr INT,
+    horas DECIMAL(5,2),
+    PRIMARY KEY (fcpf, pnr),
+    FOREIGN KEY (fcpf) REFERENCES funcionario(cpf),
+    FOREIGN KEY (pnr) REFERENCES projeto(projnumero)
+);
+
+CREATE TABLE dependente (
+    fcpf CHAR(11),
+    nome_dependente VARCHAR(30),
+    sexo CHAR(1),
+    datanasc DATE,
+    parentesco VARCHAR(20),
+    PRIMARY KEY (fcpf, nome_dependente),
+    FOREIGN KEY (fcpf) REFERENCES funcionario(Cpf)
+);
+
+-- Questão 02
+
+-- FUNCIONARIO
+INSERT INTO funcionario VALUES ('Carlos', 'J', 'Silva', '11111111111', '1985-06-15', 'Rua A', 'M', 4500.00, NULL, 5);
+INSERT INTO funcionario VALUES ('Ana', 'M', 'Souza', '22222222222', '1990-04-12', 'Rua B', 'F', 4800.00, '11111111111', 5);
+
+-- DEPARTAMENTO
+INSERT INTO deparmento VALUES ('Engenharia', 5, '11111111111', '2020-01-01');
+INSERT INTO deparmento VALUES ('Vendas', 4, '22222222222', '2021-05-15');
+
+-- LOCALIZACOES_DEP
+INSERT INTO localizacao_dep VALUES (5, 'São Paulo', 'SP');
+INSERT INTO localizacao_dep VALUES (4, 'Rio de Janeiro', 'RJ');
+
+-- PROJETO
+INSERT INTO projeto VALUES ('Projeto X', 101, 'Sede A', 5);
+INSERT INTO projeto VALUES ('Projeto Y', 102, 'Filial B', 4);
+
+-- TRABALHA_EM
+INSERT INTO trabalha_em VALUES ('11111111111', 101, 20.5);
+INSERT INTO trabalha_em VALUES ('22222222222', 102, 18.0);
+
+-- DEPENDENTE
+INSERT INTO dependente VALUES ('11111111111', 'Joãozinho', 'M', '2010-09-01', 'Filho');
+INSERT INTO dependente VALUES ('22222222222', 'Mariazinha', 'F', '2012-11-23', 'Filha');
+
+-- Questão 03
+
+UPDATE funcionario
+SET salario = salario * 1.35 
+WHERE Dnr = 5;
+
+-- Questão 04
+
+UPDATE funcionario
+SET salario = salario * 1.5 
+WHERE Dnr = 5 AND Sexo = 'F' AND Salario < 5000;
+
+-- Questão 05
+
+ALTER TABLE FUNCIONARIO
+ADD funcao VARCHAR(30);
+
+-- Questão 06
+
+DELETE FROM FUNCIONARIO
+WHERE Cpf = '11111111111';
+
